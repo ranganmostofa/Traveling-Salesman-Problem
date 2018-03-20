@@ -30,7 +30,12 @@ class DataIO:
         :param filename:
         :return:
         """
-        pass
+        with open(filename, 'w') as file:
+            num_nodes, num_edges = GraphProcessing.compute_num_nodes(graph), GraphProcessing.compute_num_edges(graph)
+            file.write(" ".join(list([str(num_nodes), str(num_edges)])) + "\n")
+            for source_node in graph.keys():
+                for terminal_node, weight in graph[source_node].items():
+                    file.write(" ".join(list([str(source_node), str(terminal_node), str(weight)])) + "\n")
 
     @staticmethod
     def __preprocess_line(line):
@@ -44,5 +49,7 @@ class DataIO:
 
 from pprint import pprint
 
-pprint(DataIO.read_graph('Data/att48.txt'))
+graph = DataIO.read_graph('Data/att48.txt')
+
+DataIO.write_graph(graph, 'test.txt')
 
