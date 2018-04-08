@@ -1,5 +1,4 @@
 from Edge import Edge
-from GraphProcessing import GraphProcessing
 
 
 class UndirectedGraph:
@@ -127,47 +126,6 @@ class UndirectedGraph:
         self.nodeset = set(nodeset)  # overwrite the existing nodeset with the input nodeset
 
         self.__check_validity()  # check if graph is valid - throws exception if not
-
-    @staticmethod
-    def extract_edge_induced_subgraph(G, predicate):
-        """
-        Given an UndirectedGraph object and a predicate that accepts Edge objects as inputs, returns the
-        edge-induced subgraph of the input graph based on the set of edges filtered by the input predicate.
-
-        NOTE: An edge-induced subgraph is defined here as a graph with a set of nodes exactly identical to
-              the original set but with the filtered set of edges. As a result, the subgraph may contain
-              disconnected nodes. However, as an added bonus of using this convention, this method may
-              also be used to efficiently produce deep copies of an existing graph
-        """
-        # initialize the new nodeset as sets containing disconnected copies of the original nodes
-        nodeset = {GraphProcessing.produce_duplicate_disconnected_node(node) for node in G.get_nodeset()}
-
-        # create a null graph using the nodeset constructed above
-        G_prime = UndirectedGraph(nodeset)
-
-        # for every edge in the original graph
-        for edge in G.get_edges():
-            if predicate(edge):  # if the edge is not filtered out
-                first_incident_node = \
-                    GraphProcessing.search_node_names(
-                        G_prime.get_nodeset(),
-                        edge.get_first_incident_node().get_name()
-                    ).pop()  # obtain the disconnected copy of the first incident node
-
-                second_incident_node = \
-                    GraphProcessing.search_node_names(
-                        G_prime.get_nodeset(),
-                        edge.get_second_incident_node().get_name()
-                    ).pop()  # obtain the disconnected copy of the second incident node
-
-                G_prime.add_edge(
-                    edge.get_weight(),
-                    dict(edge.get_attributes()),
-                    first_incident_node,
-                    second_incident_node
-                )  # create and add the duplicate edge to the subgraph
-
-        return G_prime  # return the subgraph
 
     def __has_conflicting_node_names(self):
         """
