@@ -1,4 +1,5 @@
 from Node import Node
+from UndirectedGraph import UndirectedGraph
 
 
 class GraphProcessing:
@@ -70,7 +71,7 @@ class GraphProcessing:
         for node in G.get_nodeset():  # for every node
             G_dict[node.get_name()] = dict()  # initialize the inner dictionary
             for edge in node.get_incident_edges():  # for every edge
-                other_node = {node for node in G.get_incident_nodes() if not node.get_name().__eq__()}.pop()
+                other_node = {node for node in edge.get_incident_nodes() if not node.get_name().__eq__()}.pop()
                 # add the edge, including the edge weight
                 G_dict[node.get_name()][other_node.get_name()] = edge.get_weight()
         return G_dict  # return the populated adjacency matrix representation
@@ -80,7 +81,8 @@ class GraphProcessing:
         """
         Given a graph represented as a dictionary, returns the same graph as an UndirectedGraph object
         """
-        pass
+        G_prime = UndirectedGraph()
+
 
     @staticmethod
     def construct_null_graph(num_nodes):
