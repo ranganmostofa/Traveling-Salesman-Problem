@@ -20,6 +20,7 @@ class DataIO:
                 if preprocessed_line:
                     source_node, terminal_node, weight = preprocessed_line
                     graph[source_node][terminal_node] = weight
+                    graph[terminal_node][source_node] = weight
             return graph
 
     @staticmethod
