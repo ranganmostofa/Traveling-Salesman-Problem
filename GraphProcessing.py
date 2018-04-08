@@ -9,5 +9,5 @@ class GraphProcessing:
 
     @staticmethod
     def compute_num_edges(graph):
-        return sum([len(graph[source_node].keys()) for source_node in graph.keys()])
+        return sum([len(graph[source_node].keys()) for source_node in graph.keys()]) / 2
 
