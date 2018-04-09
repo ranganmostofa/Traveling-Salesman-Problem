@@ -1,3 +1,6 @@
+from GraphProcessing import GraphProcessing
+
+
 class Edge:
     """
     General-purpose Edge class for the BipartiteGraph module
@@ -95,6 +98,20 @@ class Edge:
                 self.first_incident_node,
                 self.second_incident_node
             }
+
+    def get_other_node(self, node_name):
+        """
+
+        :param node_name:
+        :return:
+        """
+        incident_node_names = {node.get_name() for node in self.get_incident_nodes()}
+        if node_name in incident_node_names:
+            return \
+                GraphProcessing.search_node_names(
+                    self.get_incident_nodes(),
+                    incident_node_names.difference({node_name}).pop()
+                ).pop()
 
     def set_weight(self, weight):
         """

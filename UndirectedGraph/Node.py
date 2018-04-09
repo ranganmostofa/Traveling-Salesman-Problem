@@ -122,3 +122,15 @@ class Node:
         """
         self.incident_edges = set(incident_edges)  # overwrite the existing set of incident edges with the input set
 
+    def produce_duplicate_disconnected_node(self):
+        """
+        Returns a disconnected duplicate of the current node
+        """
+        # retain the original name and attributes, but clear all outgoing and incoming edges
+        return \
+            Node(
+                self.get_name(),
+                dict(self.get_attributes()),
+                set()
+            )
+

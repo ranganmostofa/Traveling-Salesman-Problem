@@ -47,10 +47,3 @@ class DataIO:
         """
         return [int(element) for element in line.lstrip().rstrip().split()]
 
-
-from pprint import pprint
-
-graph = DataIO.read_graph('Data/att48.txt')
-
-DataIO.write_graph(graph, 'test.txt')
-
