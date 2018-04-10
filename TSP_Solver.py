@@ -18,3 +18,4 @@ for node in num_nodes:
     node = m.addVar(vtype=GRB.BINARY, name=("x"+str(i)))
     i += 1
 
+
