@@ -1,12 +1,12 @@
 from time import time
 from DataIO import DataIO
 from StoerWagner import StoerWagner
-from UndirectedGraph.UndirectedGraph import UndirectedGraph
+from UndirectedGraph import UndirectedGraph
 
 
 t_0 = time()
 
-filename = "att48.txt"
+filename = "synthetic8.txt"
 
 dict_graph = DataIO.read_graph("./../Data/" + filename)
 
