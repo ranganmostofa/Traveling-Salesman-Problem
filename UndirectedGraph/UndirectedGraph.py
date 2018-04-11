@@ -279,7 +279,7 @@ class UndirectedGraph:
 
         return G
 
-    def merge_nodes(self, node_names, merged_node_name):
+    def contract_graph(self, node_names, merged_node_name):
         """
 
         :param node_names:

@@ -1,4 +1,4 @@
-from GraphProcessing import GraphProcessing
+from UndirectedGraph.GraphProcessing import GraphProcessing
 
 
 class DataIO:
