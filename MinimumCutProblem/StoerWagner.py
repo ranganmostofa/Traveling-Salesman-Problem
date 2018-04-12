@@ -1,3 +1,6 @@
+from GraphProcessing import GraphProcessing
+
+
 class StoerWagner:
     """
     Class that houses Python implementation of the global minimum cut algorithm on undirected
@@ -36,57 +39,63 @@ class StoerWagner:
         Given an UndirectedGraph object and the initial node name, performs a single minimum cut phase
         iteration and returns the resulting contracted graph and the current cut of the phase
         """
-        induced_ordering = list([initial_node_name])  # initialize the induced ordering
-        while set(induced_ordering) != G.get_node_names():  # while not all vertices have been ordered
-            print(str(len(induced_ordering)) + ": " + str(induced_ordering))
+        # initialize the induced ordering, connections strengths and the next vertex to be added to the induced ordering
+        induced_ordering = list([initial_node_name])
+        G_prime = StoerWagner.__initialize_connection_strengths(G)
+        next_vertex = GraphProcessing.search_node_names(G_prime.get_nodeset(), initial_node_name).pop()
+        while set(induced_ordering) != G_prime.get_node_names():  # while not all vertices have been ordered
             # determine the next vertex in the ordering
-            next_vertex = StoerWagner.__determine_most_tightly_connected_vertex(G, induced_ordering)
+            next_vertex = StoerWagner.__determine_most_tightly_connected_vertex(G_prime, induced_ordering, next_vertex)
             induced_ordering.append(next_vertex.get_name())  # add the vertex to the ordering
         # construct the set of vertices to be merged
         merge_nodelist = StoerWagner.__get_merge_nodelist(induced_ordering)
         current_cut = StoerWagner.__construct_current_cut(induced_ordering)  # construct the cut partitions
         print("Current Cut: " + str(current_cut))
-        print(len(induced_ordering))
-        # perform graph contraction based on the list of vertices to be merged
-        G_prime = G.contract_graph(merge_nodelist, StoerWagner.MERGED_NODE_NAME_DELIMITER.join(merge_nodelist))
-        return G_prime, current_cut  # return the contracted graph and the current cut of the phase
+        G_contracted = \
+            G_prime.contract_graph(
+                merge_nodelist,
+                StoerWagner.MERGED_NODE_NAME_DELIMITER.join(merge_nodelist)
+            )  # perform graph contraction based on the list of vertices to be merged
+        return G_contracted, current_cut  # return the contracted graph and the current cut of the phase
 
     @staticmethod
-    def __determine_most_tightly_connected_vertex(G, induced_ordering):
+    def __determine_most_tightly_connected_vertex(G, induced_ordering, previous_vertex):
         """
-        Given an UndirectedGraph object and the list of the induced ordering of vertices computed from a
-        single run of the minimum cut phase in the Stoer-Wagner algorithm, determines the vertex not in
-        the input ordering that is most strongly connected to vertices in the ordering
+        Given an UndirectedGraph object, the list of the induced ordering of vertices computed from a
+        single run of the minimum cut phase in the Stoer-Wagner algorithm, and the previous vertex added
+        to the induced ordering, determines the vertex not in the input ordering that is most strongly
+        connected to the vertices in the ordering
         """
-        G_prime = StoerWagner.__compute_connection_strengths(G, induced_ordering)  # compute the connection strengths
+        # compute the connection strengths
+        G_prime = StoerWagner.__compute_connection_strengths(G, induced_ordering, previous_vertex)
 
         connection_strength_map = \
             dict({
                 node: node.get_attribute_value(StoerWagner.CONNECTION_STRENGTH_ATTRIBUTE)
                 for node in G_prime.get_nodeset()
+                if node.get_name() not in induced_ordering
             })  # obtain the connection map
 
         # return the node with the strongest connection
         return max(connection_strength_map, key=connection_strength_map.get)
 
     @staticmethod
-    def __compute_connection_strengths(G, induced_ordering):
+    def __compute_connection_strengths(G, induced_ordering, previous_vertex):
         """
-        Given an UndirectedGraph object and the list of the induced ordering of vertices computed from a
-        single run of the minimum cut phase in the Stoer-Wagner algorithm, computes the connection strength
-        of every vertex not in the induced ordering to the vertices in the ordering
+        Given an UndirectedGraph object, the list of the induced ordering of vertices computed from a
+        single run of the minimum cut phase in the Stoer-Wagner algorithm and the previous vertex added
+        to the induced ordering, computes the connection strength of every vertex not in the induced ordering
+        to the vertices in the ordering
         """
-        G_prime = StoerWagner.__initialize_connection_strengths(G)  # initialize the connection strengths to zero
-        for node in G_prime.get_nodeset():  # for every node in the graph
-            if node.get_name() not in induced_ordering:  # if the node is not in the ordering
-                for edge in node.get_incident_edges():  # for every edge incident to this node
-                    other_node = edge.get_other_node(node.get_name())  # get the other node object
-                    if other_node.get_name() in induced_ordering:  # if the other node is in the ordering
-                        node.set_attribute_value(
-                            StoerWagner.CONNECTION_STRENGTH_ATTRIBUTE,
-                            node.get_attribute_value(StoerWagner.CONNECTION_STRENGTH_ATTRIBUTE) + edge.get_weight()
-                        )  # add to the connection strength, the weight of the edge
-        return G_prime  # return the graph with the connection strength information
+        # for edges incident to the previous vertex added to the induced ordering
+        for edge in previous_vertex.get_incident_edges():
+            other_node = edge.get_other_node(previous_vertex.get_name())  # get the other node object
+            if other_node.get_name() not in induced_ordering:  # if the other node is not in the ordering
+                other_node.set_attribute_value(
+                    StoerWagner.CONNECTION_STRENGTH_ATTRIBUTE,
+                    other_node.get_attribute_value(StoerWagner.CONNECTION_STRENGTH_ATTRIBUTE) + edge.get_weight()
+                )  # add to the connection strength, the weight of the edge
+        return G  # return the graph with the connection strength information
 
     @staticmethod
     def __initialize_connection_strengths(G):
@@ -94,7 +103,7 @@ class StoerWagner:
         Given an UndirectedGraph object, initializes the connection strength of every vertex in the graph
         to zero and returns the new graph
         """
-        G_prime = G.__deepcopy__()  # construct a seepcopy of the graph
+        G_prime = G.__deepcopy__()  # construct a deepcopy of the graph
         # for every vertex in the graph, initialize the connection strength to zero
         for node in G_prime.get_nodeset(): node.add_attribute(StoerWagner.CONNECTION_STRENGTH_ATTRIBUTE, float(0))
         return G_prime  # return the new graph
