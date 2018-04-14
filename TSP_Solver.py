@@ -1,12 +1,14 @@
-from gurobipy import *
 from time import time
+from gurobipy import *
 from DataIO import DataIO
 from StoerWagner import StoerWagner
 from UndirectedGraph import UndirectedGraph
 
 
+t0 = time()
+
 # filename = r"C:\Users\marco_000\Traveling-Salesman-Problem_new\Data\synthetic8.txt"  # for Marco
-filename = "./Data/synthetic8.txt"  # for Rangan
+filename = "./Data/ulysses22.txt"  # for Rangan
 
 weights = DataIO.read_graph(filename)
 
@@ -37,14 +39,14 @@ iter_index = 1
 
 while True:
 
-    print "\nIteration Index: " + str(iter_index) + "\n"
+    print "\nIteration Number: " + str(iter_index) + "\n"
 
     m.update()
     m.optimize()
 
-    print "\n"
-    for pair, var in variables.items():
-        print str(pair) + ": " + str(var.X)
+    # print "\n"
+    # for pair, var in variables.items():
+    #     print str(pair) + ": " + str(var.X)
 
     duplicate_weights = DataIO.read_graph(filename)
     for pair, var in variables.items():
@@ -70,4 +72,8 @@ while True:
 
     if minimum_cut_weight >= 2:
         break
+
+t1 = time()
+
+print "Total time taken: " + str(t1 - t0) + " seconds"
 
