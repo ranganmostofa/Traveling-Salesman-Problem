@@ -46,4 +46,7 @@ for pair, var in variables.items():
     duplicate_weights[i][j] = var.X
     duplicate_weights[j][i] = var.X
 
-
+graph = UndirectedGraph.dictionary_to_undirected_graph_form(duplicate_weights)
+minimum_cut, minimum_cut_weight = StoerWagner.apply(graph, graph.get_node_names().pop())
+print(minimum_cut)
+print(minimum_cut_weight)
