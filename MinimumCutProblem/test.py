@@ -6,7 +6,7 @@ from UndirectedGraph import UndirectedGraph
 
 t_0 = time()
 
-filename = "berlin52.txt"
+filename = "att48.txt"
 
 dict_graph = DataIO.read_graph("./../Data/" + filename)
 

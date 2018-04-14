@@ -39,7 +39,7 @@ class DataIO:
                     file.write(" ".join(list([str(source_node), str(terminal_node), str(weight)])) + "\n")
 
     @staticmethod
-    def __preprocess_line(line):
+    def _preprocess_line(line):
         """
 
         :param line:
