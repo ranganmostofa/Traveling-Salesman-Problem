@@ -74,6 +74,6 @@ while True:
         break
 
 t1 = time()
-m.write("berlin_out1.lp")
+m.write("berlin_out3.lp")
 print "Total time taken: " + str(t1 - t0) + " seconds"
 
