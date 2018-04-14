@@ -4,20 +4,42 @@ from DataIO import DataIO
 from StoerWagner import StoerWagner
 from UndirectedGraph import UndirectedGraph
 
-filename = r"C:\Users\marco_000\Traveling-Salesman-Problem_new\Data\synthetic8.txt"
+
+# filename = r"C:\Users\marco_000\Traveling-Salesman-Problem_new\Data\synthetic8.txt"  # for Marco
+filename = "./Data/synthetic8.txt"  # for Rangan
 
 weights = DataIO.read_graph(filename)
-print(weights)
+
 num_nodes = len(weights)
+
 # Create Model
-m = Model("TSP")
+m = Model("E4T 4$$")
+
 # Create variables
-variables = []
+variables = {}
 for i in range(num_nodes):
     for j in weights[i].keys():
         if j in weights[i]:
             if not (j, i) in variables:
-                m.addVar(obj=weights[i][j], vtype=GRB.BINARY, name='e'+str(i)+'_'+str(j))
-                variables.append((i, j))
+                variable = m.addVar(obj=weights[i][j], vtype=GRB.BINARY, name='e'+str(i)+'_'+str(j))
+                variables[tuple((i, j))] = variable
+
+# Add Degree-2 Constraints
+for i in weights.keys():
+    lhs = LinExpr()
+    for pair, var in variables.items():
+        if i in pair:
+            lhs.add(var)
+    m.addConstr(lhs == 2)
+
 m.update()
-print(variables)
+# print(variables)
+m.optimize()
+
+for i in weights.keys():
+    for j in weights[i].keys():
+        if (i, j) in variables:
+            print str((i, j)) + str(variables[(i, j)].X)
+        else:
+            print str((j, i)) + str(variables[(j, i)].X)
+
