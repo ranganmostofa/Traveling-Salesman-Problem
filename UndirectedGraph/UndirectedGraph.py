@@ -76,6 +76,25 @@ class UndirectedGraph:
 
         self.__check_validity()  # check if graph is valid - throws exception if not
 
+    def remove_node(self, node):
+        """
+        Given a node object, checks to see if the node is part of the nodeset of the graph and if so,
+        removes the node from the graph
+        """
+        # if the node is a part of the graph
+        if node.get_name() in self.get_node_names():
+            for edge in node.get_incident_edges():  # for every edge incident to the input node
+                other_node = edge.get_other_node(node.get_name())  # get the other incident node object
+                if other_node.get_name() in self.get_node_names():  # if the other node is a part of the graph
+                    self.remove_edge(tuple((node, other_node)))  # remove the edge
+            self.set_nodeset(
+                set({
+                    vertex
+                    for vertex in self.get_nodeset()
+                    if not vertex.get_name().__eq__(node.get_name())
+                })
+            )  # remove the node from the graph's nodeset
+
     def add_edge(self, weight, attributes, first_incident_node, second_incident_node):
         """
         Given the necessary inner fields of an Edge object, creates the Edge object and connects the
@@ -98,19 +117,27 @@ class UndirectedGraph:
 
         return edge  # return the newly added edge
 
+    def remove_edge(self, node_pair):
+        """
+        Given a pair of node objects, checks if the nodes are contained in the graph and if so,
+        removes the edge from the graph
+        """
+        node, other_node = node_pair  # unpack the nodes
+        # if the nodes are part of the graph
+        if node.get_name() in self.get_node_names() and other_node.get_name() in self.get_node_names():
+            node.remove_incident_edge(other_node.get_name())  # remove the incident edge object
+            other_node.remove_incident_edge(node.get_name())  # references from both nodes
+
     def contains_edge(self, node, other_node):
         """
-
-        :param node:
-        :param other_node:
-        :return:
+        Given two node objects, returns true if there exists an edge between the two objects and false otherwise
         """
         return \
             {node.get_name(), other_node.get_name()} in \
             list([
                 {edge.get_first_incident_node().get_name(), edge.get_second_incident_node().get_name()}
                 for edge in self.get_edges()
-            ])
+            ])  # return true if there exists an edge between the input nodes and false otherwise
 
     def get_nodeset(self):
         """
@@ -126,11 +153,10 @@ class UndirectedGraph:
 
     def get_edge(self, node, other_node):
         """
-
-        :param node:
-        :param other_node:
-        :return:
+        Given two nodes, returns the edge that connects them. Raises an exception if such an edge
+        does not exist
         """
+        # if there exists an edge between the two input nodes
         if self.contains_edge(node, other_node):
             return \
                 {
@@ -144,7 +170,8 @@ class UndirectedGraph:
                            edge.get_first_incident_node().get_name(),
                            edge.get_second_incident_node().get_name()
                        }
-                }.pop()
+                }.pop()  # return the edge
+        # otherwise raise an exception
         raise Exception("Invalid request: desired edge does not exist.")
 
     def get_edges(self):
@@ -236,27 +263,28 @@ class UndirectedGraph:
 
     def extract_node_induced_subgraph(self, predicate):
         """
-
-        :param predicate:
-        :return:
+        Given a predicate that accepts Node objects as inputs, returns the node-induced subgraph of the graph
+        based on the set of nodes filtered by the input predicate.
         """
+        # construct the filtered nodeset
         nodeset = {node.produce_duplicate_disconnected_node() for node in self.get_nodeset() if predicate(node)}
 
-        G_prime = UndirectedGraph(nodeset)
+        G_prime = UndirectedGraph(nodeset)  # create a new subgraph
 
-        for edge in self.get_edges():
+        for edge in self.get_edges():  # for every edge in the original graph
+            # if the first incident node is in the graph
             if edge.get_first_incident_node().get_name() in G_prime.get_node_names():
+                # if the second incident node is also in the graph
                 if edge.get_second_incident_node().get_name() in G_prime.get_node_names():
+                    # add the edge to the subgraph
                     G_prime = UndirectedGraph.__induced_subgraph_helper(G_prime, edge)
-        return G_prime
+        return G_prime  # return the subgraph
 
     @staticmethod
     def __induced_subgraph_helper(G, edge):
         """
-
-        :param G:
-        :param edge:
-        :return:
+        Helper function that adds a duplicate edge to the input graph and returns the modified graph.
+        Useful for extracting subgraphs.
         """
         first_incident_node = \
             GraphProcessing.search_node_names(
@@ -281,26 +309,30 @@ class UndirectedGraph:
 
     def contract_graph(self, node_names, merged_node_name):
         """
-
-        :param node_names:
-        :param merged_node_name:
-        :return:
+        Given a set of node names to merge and the final merged node name, contracts the nodes in the
+        input set to a single node by carrying out the following steps:
+        (1) Add node with the input merged node name
+        (2) Delete nodes that were merged
+        (3) Delete edges between nodes that were merged and
+        (4) Any edges from the two vertices to a remaining vertex are replaced by an edge weighted by the sum
+            of the weights of the previous two edges
         """
-        G_prime = self.extract_node_induced_subgraph(lambda node: node.get_name() not in node_names)
-        merged_node = Node(merged_node_name, dict(), set())
-        G_prime.add_node(merged_node)
-        for node_name in node_names:
+        merged_node = Node(merged_node_name, dict(), set())  # create the merged node
+        self.add_node(merged_node)  # add the merged node to the graph
+        for node_name in node_names:  # for every node in the merged node set
+            # find the corresponding node in the graph
             node = GraphProcessing.search_node_names(self.get_nodeset(), node_name).pop()
-            for edge in node.get_incident_edges():
-                other_node = edge.get_other_node(node_name)
-                if other_node.get_name() not in node_names:
-                    G_prime_node = GraphProcessing.search_node_names(G_prime.get_nodeset(), other_node.get_name()).pop()
-                    if G_prime.contains_edge(merged_node, G_prime_node):
-                        G_prime_edge = G_prime.get_edge(merged_node, G_prime_node)
-                        G_prime_edge.set_weight(G_prime_edge.get_weight() + edge.get_weight())
+            for edge in node.get_incident_edges():  # for every edge incident to this node
+                other_node = edge.get_other_node(node_name)  # get the other node object
+                if other_node.get_name() not in node_names:  # if the other node is also not being merged
+                    if self.contains_edge(merged_node, other_node):  # if the graph already has the edge
+                        new_edge = self.get_edge(merged_node, other_node)  # get the object reference to the edge
+                        new_edge.set_weight(new_edge.get_weight() + edge.get_weight())  # update the weight
                     else:
-                        G_prime.add_edge(edge.get_weight(), dict(), merged_node, G_prime_node)
-        return G_prime
+                        # otherwise, create a new edge
+                        self.add_edge(edge.get_weight(), dict(), merged_node, other_node)
+                    self.remove_edge(tuple((node, other_node)))  # remove the old edge
+            self.remove_node(node)  # remove the node from the graph
 
     def __has_conflicting_node_names(self):
         """

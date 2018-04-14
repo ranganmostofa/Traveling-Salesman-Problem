@@ -68,7 +68,8 @@ class Node:
                 [
                     edge
                     for edge in self.incident_edges
-                    if not edge.get_second_incident_node().get_name().__eq__(other_node_name)
+                    if not (edge.get_first_incident_node().get_name().__eq__(other_node_name) or
+                            edge.get_second_incident_node().get_name().__eq__(other_node_name))
                 ]
             )
         )

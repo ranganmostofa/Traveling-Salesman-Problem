@@ -101,17 +101,17 @@ class Edge:
 
     def get_other_node(self, node_name):
         """
-
-        :param node_name:
-        :return:
+        Given a node name, checks if the name belongs to a node incident to the edge and if so, returns
+        the node object reference to the other incident node
         """
+        # get the set of node names that are incident to this edge
         incident_node_names = {node.get_name() for node in self.get_incident_nodes()}
-        if node_name in incident_node_names:
+        if node_name in incident_node_names:  # if the input name belongs to a node that is incident to the edge
             return \
                 GraphProcessing.search_node_names(
                     self.get_incident_nodes(),
                     incident_node_names.difference({node_name}).pop()
-                ).pop()
+                ).pop()  # return the node object reference to the other incident node
 
     def set_weight(self, weight):
         """

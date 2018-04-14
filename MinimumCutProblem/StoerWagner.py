@@ -50,13 +50,11 @@ class StoerWagner:
         # construct the set of vertices to be merged
         merge_nodelist = StoerWagner.__get_merge_nodelist(induced_ordering)
         current_cut = StoerWagner.__construct_current_cut(induced_ordering)  # construct the cut partitions
-        print("Current Cut: " + str(current_cut))
-        G_contracted = \
-            G_prime.contract_graph(
-                merge_nodelist,
-                StoerWagner.MERGED_NODE_NAME_DELIMITER.join(merge_nodelist)
-            )  # perform graph contraction based on the list of vertices to be merged
-        return G_contracted, current_cut  # return the contracted graph and the current cut of the phase
+        G_prime.contract_graph(
+            merge_nodelist,
+            StoerWagner.MERGED_NODE_NAME_DELIMITER.join(merge_nodelist)
+        )  # perform graph contraction based on the list of vertices to be merged
+        return G_prime, current_cut  # return the contracted graph and the current cut of the phase
 
     @staticmethod
     def __determine_most_tightly_connected_vertex(G, induced_ordering, previous_vertex):
