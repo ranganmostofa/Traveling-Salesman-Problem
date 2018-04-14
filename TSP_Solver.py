@@ -8,7 +8,7 @@ from UndirectedGraph import UndirectedGraph
 t0 = time()
 
 # filename = r"C:\Users\marco_000\Traveling-Salesman-Problem_new\Data\synthetic8.txt"  # for Marco
-filename = "./Data/ulysses22.txt"  # for Rangan
+filename = "./Data/berlin52.txt"  # for Rangan
 
 weights = DataIO.read_graph(filename)
 
@@ -74,6 +74,6 @@ while True:
         break
 
 t1 = time()
-
+m.write("berlin_out1.lp")
 print "Total time taken: " + str(t1 - t0) + " seconds"
 
