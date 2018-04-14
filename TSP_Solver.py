@@ -36,10 +36,6 @@ m.update()
 # print(variables)
 m.optimize()
 
-for i in weights.keys():
-    for j in weights[i].keys():
-        if (i, j) in variables:
-            print str((i, j)) + str(variables[(i, j)].X)
-        else:
-            print str((j, i)) + str(variables[(j, i)].X)
+for pair, var in variables.items():
+    print str(pair) + ": " + str(var.X)
 
