@@ -88,7 +88,7 @@ for i,j in vars.keys():
 
 # Add degree-2 constraint
 
-m.addConstrs(vars.sum(i,'*') == 2 for i in range(n))
+m.addConstrs(vars.sum(i, '*') == 2 for i in range(n))
 
 # Using Python looping constructs, the preceding would be...
 #

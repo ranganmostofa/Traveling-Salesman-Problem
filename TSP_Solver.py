@@ -12,6 +12,7 @@ weights = DataIO.read_graph(filename)
 
 num_nodes = len(weights)
 
+#WHILE LOOP
 # Create Model
 m = Model("E4T 4$$")
 
@@ -35,7 +36,14 @@ for i in weights.keys():
 m.update()
 # print(variables)
 m.optimize()
-
+print(variables.items())
 for pair, var in variables.items():
     print str(pair) + ": " + str(var.X)
+
+duplicate_weights = DataIO.read_graph(filename)
+for pair, var in variables.items():
+    i, j = pair
+    duplicate_weights[i][j] = var.X
+    duplicate_weights[j][i] = var.X
+
 
