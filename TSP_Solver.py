@@ -7,7 +7,7 @@ from UndirectedGraph import UndirectedGraph
 
 t0 = time()
 
-graph_filename = "ulysses22.txt"
+graph_filename = "hk48.txt"
 
 relative_path = "./Data/" + graph_filename
 
@@ -72,11 +72,12 @@ while True:
     if minimum_cut_weight >= 2:
         break
 
-# model.write("att48_out5.lp")
-
-DataIO.write_tour(weights, model, graph_filename.split(".").pop(0) + "_tour.txt")
-
 t1 = time()
+
+model.write("hk48_out5.lp")
+
+# DataIO.write_tour(weights, model, graph_filename.split(".").pop(0) + "_tour.txt")
+
 
 print "Total time taken: " + str(t1 - t0) + " seconds"
 
