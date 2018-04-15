@@ -7,7 +7,7 @@ from UndirectedGraph import UndirectedGraph
 
 t0 = time()
 
-graph_filename = "gr21.txt"
+graph_filename = "berlin52.txt"
 
 relative_path = "./Data/" + graph_filename
 
@@ -77,7 +77,7 @@ t1 = time()
 
 model.write("gr21_out1.lp")
 
-# DataIO.write_tour(weights, model, graph_filename.split(".").pop(0) + "_tour.txt")
+DataIO.write_tour(weights, model, graph_filename.split(".").pop(0) + "_tour.txt")
 
 
 print "Total time taken: " + str(t1 - t0) + " seconds"
