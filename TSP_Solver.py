@@ -7,7 +7,7 @@ from UndirectedGraph import UndirectedGraph
 
 t0 = time()
 
-graph_filename = "hk48.txt"
+graph_filename = "gr21.txt"
 
 relative_path = "./Data/" + graph_filename
 
@@ -57,6 +57,9 @@ while True:
     graph = UndirectedGraph.dictionary_to_undirected_graph_form(duplicate_weights)
     minimum_cut, minimum_cut_weight = StoerWagner.apply(graph, graph.get_node_names().pop())
 
+    if minimum_cut_weight >= 2:
+        break
+
     partitionA, partitionB = minimum_cut
     sec_lhs = LinExpr()
     for i in partitionA:
@@ -69,12 +72,10 @@ while True:
 
     iter_index += 1
 
-    if minimum_cut_weight >= 2:
-        break
 
 t1 = time()
 
-model.write("hk48_out5.lp")
+model.write("gr21_out1.lp")
 
 # DataIO.write_tour(weights, model, graph_filename.split(".").pop(0) + "_tour.txt")
 

@@ -1,4 +1,4 @@
-\ Model E4T 4$$
+\ Model TSP
 \ LP format - for model browsing. Use MPS format to capture full model detail.
 Minimize
   510 e0_1 + 635 e0_2 + 91 e0_3 + 385 e0_4 + 155 e0_5 + 110 e0_6 + 130 e0_7
@@ -102,9 +102,6 @@ Subject To
  R20: e0_20 + e1_20 + e2_20 + e3_20 + e4_20 + e5_20 + e6_20 + e7_20 + e8_20
    + e9_20 + e10_20 + e11_20 + e12_20 + e13_20 + e14_20 + e15_20 + e16_20
    + e17_20 + e18_20 + e19_20 = 2
- R21: e0_19 + e1_19 + e2_19 + e3_19 + e4_19 + e5_19 + e6_19 + e7_19 + e8_19
-   + e9_19 + e10_19 + e11_19 + e12_19 + e13_19 + e14_19 + e15_19 + e16_19
-   + e17_19 + e18_19 + e19_20 >= 2
 Bounds
 Binaries
  e0_1 e0_2 e0_3 e0_4 e0_5 e0_6 e0_7 e0_8 e0_9 e0_10 e0_11 e0_12 e0_13 e0_14
