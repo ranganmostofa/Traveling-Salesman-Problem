@@ -75,7 +75,7 @@ while True:
 
 t1 = time()
 
-model.write("berlin52_sol.sol")
+model.write("berlin52_out.lp")
 DataIO.write_tour(weights, model, graph_filename.split(".").pop(0) + "_tour.txt")
 
 
