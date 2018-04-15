@@ -39,6 +39,23 @@ class DataIO:
                     file.write(" ".join(list([str(source_node), str(terminal_node), str(weight)])) + "\n")
 
     @staticmethod
+    def write_tour(graph, tsp_model, filename):
+        """
+
+        :param graph:
+        :param tsp_model:
+        :param filename:
+        :return:
+        """
+        with open(filename, 'w') as file:
+            for decision_variable in tsp_model.getVars():
+                if decision_variable.getAttr("X"):
+                    variable_name = decision_variable.getAttr("VarName")
+                    i, j = (int(num) for num in variable_name[1:].split("_"))
+                    file.write(" ".join([str(i), str(j), str(graph[i][j])]) + "\n")
+            file.write("The cost of the best tour is: " + str(tsp_model.getAttr("ObjVal")) + "\n")
+
+    @staticmethod
     def __preprocess_line(line):
         """
 

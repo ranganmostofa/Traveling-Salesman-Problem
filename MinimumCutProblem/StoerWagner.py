@@ -1,4 +1,5 @@
 from GraphProcessing import GraphProcessing
+from time import time
 
 
 class StoerWagner:

@@ -76,13 +76,13 @@ vars = m.addVars(dist.keys(), obj=dist, vtype=GRB.BINARY, name='e')
 for i,j in vars.keys():
     vars[j,i] = vars[i,j] # edge in opposite direction
 
-# You could use Python looping constructs and m.addVar() to create
+# You could use Python looping constructs and model.addVar() to create
 # these decision variables instead.  The following would be equivalent
-# to the preceding m.addVars() call...
+# to the preceding model.addVars() call...
 #
 # vars = tupledict()
 # for i,j in dist.keys():
-#   vars[i,j] = m.addVar(obj=dist[i,j], vtype=GRB.BINARY,
+#   vars[i,j] = model.addVar(obj=dist[i,j], vtype=GRB.BINARY,
 #                        name='e[%d,%d]'%(i,j))
 
 
@@ -93,7 +93,7 @@ m.addConstrs(vars.sum(i, '*') == 2 for i in range(n))
 # Using Python looping constructs, the preceding would be...
 #
 # for i in range(n):
-#   m.addConstr(sum(vars[i,j] for j in range(n)) == 2)
+#   model.addConstr(sum(vars[i,j] for j in range(n)) == 2)
 
 
 # Optimize model
