@@ -2,6 +2,7 @@ from time import time
 from gurobipy import *
 from DataIO import DataIO
 from StoerWagner import StoerWagner
+from GraphVisualizer import GraphVisualizer
 from UndirectedGraph import UndirectedGraph
 
 
@@ -60,6 +61,8 @@ weights = DataIO.read_graph(path)  # read the graph
 
 num_nodes = len(weights.keys())  # get the number of nodes in the graph
 
+GraphVisualizer.disp_graph(weights, graph_prefix + "_graph")  # visualize the original graph
+
 # Create Model
 model = Model("TSP")
 
@@ -110,6 +113,11 @@ while True:  # enter infinite loop - see below for termination criterion
 
     if minimum_cut_weight >= 2:  # if the minimum cut weight is greater than or equal to 2
         break  # break from infinite loop
+    else:  # otherwise
+        tour = construct_tour(weights, model)  # construct current tour
+        GraphVisualizer.disp_graph(tour, graph_prefix + "_tour_" + str(iter_index))  # display the graph
+        while raw_input("\nHit enter to proceed to next iteration: "): pass  # ask for input to proceed
+        print "\n"
 
     partitionA, partitionB = minimum_cut  # add subtour-elimination constraints to the model based on the minimum cut
     sec_lhs = LinExpr()
@@ -133,4 +141,8 @@ model.write(graph_prefix + "_out.sol")  # output the sol file using gurobi
 DataIO.write_tour(weights, model, graph_prefix + "_tour.txt")
 
 print "Total time taken: " + str(t1 - t0) + " seconds"  # print the total time taken to solve
+
+optimal_tour = construct_tour(weights, model)  # construct the optimal tour
+
+GraphVisualizer.disp_graph(optimal_tour, graph_prefix + "_optimal_tour")  # visualize the optimal tour
 
