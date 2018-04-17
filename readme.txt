@@ -12,3 +12,5 @@ In order to run “tsp_marco_rangan.py”, follow these steps:
 
 NOTE: The code bundle also includes “tsp_solver_demo.py” which contains additional code that displays the original graph and the optimal tour at each iteration, including the final one.
 
+For details, see the Gurobi Quick Start Guide: http://www.gurobi.com/documentation/
+
