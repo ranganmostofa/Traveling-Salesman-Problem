@@ -51,7 +51,7 @@ class DataIO:
             for decision_variable in tsp_model.getVars():
                 if decision_variable.getAttr("X"):
                     variable_name = decision_variable.getAttr("VarName")
-                    i, j = (int(num) for num in variable_name[1:].split("_"))
+                    i, j = (int(num) for num in variable_name.split("_"))
                     file.write(" ".join([str(i), str(j), str(graph[i][j])]) + "\n")
             file.write("The cost of the best tour is: " + str(tsp_model.getAttr("ObjVal")) + "\n")
 
