@@ -27,7 +27,7 @@ def minimum_spanning_tree(dict1):
 
 t0 = time()
 
-graph_filename = "ulysses22.txt"
+graph_filename = "berlin52.txt"
 
 relative_path = "./Data/" + graph_filename
 
@@ -102,9 +102,8 @@ while True:
 
 t1 = time()
 
-model.write("berlin52_out.lp")
-DataIO.write_tour(weights, model, graph_filename.split(".").pop(0) + "_tour.txt")
+# model.write("hk48_outmst.lp")
+# DataIO.write_tour(weights, model, graph_filename.split(".").pop(0) + "_tour.txt")
 
 
 print "Total time taken: " + str(t1 - t0) + " seconds"
-

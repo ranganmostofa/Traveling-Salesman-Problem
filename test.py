@@ -6,7 +6,7 @@ from UndirectedGraph import UndirectedGraph
 
 t_0 = time()
 
-graph_filename = "att48.txt"
+graph_filename = "st70.txt"
 
 relative_path = "./Data/" + graph_filename
 
